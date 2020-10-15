@@ -1,15 +1,15 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from 'vue'
+import Vuex from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
+import session from './modules/session'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
-export default new Vuex.Store({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
+export const store = new Vuex.Store({
   modules: {
+    session,
   },
-});
+  plugins: [
+    createPersistedState()
+  ]
+})
