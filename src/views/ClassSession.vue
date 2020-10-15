@@ -1,6 +1,10 @@
 <template>
   <div class="session">
-    <h3>Class Session</h3>
+    <div class="session_head">
+      <h3>Class Session</h3>
+      <el-button type="text" icon="el-icon-turn-off"> Leave Session</el-button>
+    </div>
+
     <el-row type="flex" justify="center">
       <el-col :span="6">
         <div class="message-box">
@@ -13,9 +17,15 @@
             <li>Chi</li>
           </ul>
 
-          <el-input type="textarea" v-model="message" rows="7" clearable></el-input>
+          <el-input
+            type="textarea"
+            v-model="message"
+            rows="7"
+            placeholder="Send questions"
+          ></el-input>
           <div style="margin-top: 15px;">
             <el-button icon="el-icon-s-promotion"></el-button>
+            <el-button icon="el-icon-full-screen">Send Equation</el-button>
           </div>
         </div>
       </el-col>
@@ -59,6 +69,11 @@ export default {
 .session {
   width: 100;
   margin: 20px;
+
+  .session_head {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
 .chat-window {
