@@ -24,26 +24,19 @@
             placeholder="Send questions"
           ></el-input>
           <div style="margin-top: 15px;">
-            <el-button icon="el-icon-s-promotion"></el-button>
-            <el-button icon="el-icon-full-screen">Send Equation</el-button>
+            <el-button icon="el-icon-s-promotion" @click="sendMessage"></el-button>
+            <el-button icon="el-icon-full-screen" @click="dialogVisible = true"
+              >Send Equation</el-button
+            >
           </div>
         </div>
       </el-col>
       <el-col :span="13">
         <div class="chat-window">
-          <div class="outgoing-message">
+          <div class="incoming-message" v-for="(msg, index) in messages" :key="index">
             <div>
               <p>
-                Mesage hi all people in the group, hope we all going good Mesage hi all people in
-                the group, hope we all going good
-              </p>
-              <span>Sent By: Cha</span> <span>| few seconds ago</span>
-            </div>
-          </div>
-          <div class="incoming-message">
-            <div>
-              <p>
-                Mesage hi all people
+                {{ msg.message }}
               </p>
               <span>Sent By: Cha</span> <span>| few seconds ago</span>
             </div>
@@ -51,16 +44,41 @@
         </div>
       </el-col>
     </el-row>
+
+    <el-dialog title="Tips" :visible.sync="dialogVisible" fullscreen> </el-dialog>
   </div>
 </template>
 
 <script>
+import io from "socket.io-client";
+
 export default {
   name: "Session",
   data() {
     return {
-      message: ""
+      message: "",
+      messages: [],
+      dialogVisible: false,
+      socket: io("localhost:3000")
     };
+  },
+  mounted() {
+    this.socket.on("MESSAGE", data => {
+      this.messages = [...this.messages, data];
+      console.log(this.messages);
+      // you can also do this.messages.push(data)
+    });
+  },
+  methods: {
+    sendMessage(e) {
+      e.preventDefault();
+
+      this.socket.emit("SEND_MESSAGE", {
+        user: this.user,
+        message: this.message
+      });
+      this.message = "";
+    }
   }
 };
 </script>

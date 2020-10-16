@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import Session from '../views/ClassSession.vue';
+import Drawing from '../components/DrawingBoard.vue'
 
 Vue.use(VueRouter);
 
@@ -15,6 +16,11 @@ const routes = [
     path: '/session',
     name: 'Session',
     component: Session,
+  },
+  {
+    path: '/drawing',
+    name: 'Drawing',
+    component: Drawing,
   },
 ];
 

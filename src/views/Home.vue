@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import userService from "../api/users";
+
 export default {
   name: "Home",
   data() {
@@ -62,8 +64,33 @@ export default {
   },
   methods: {
     enterSession() {
-      console.log(this.loginForm);
+      userService
+        .getUsers()
+        .then(response => {
+          console.log(response);
+        })
+        .catch(errors => console.log(errors));
     }
   }
 };
 </script>
+
+<style lang="scss">
+.login {
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+
+  .login_form {
+    width: 430px;
+    border-radius: 10px;
+    padding: 25px;
+    background-color: whitesmoke;
+  }
+}
+</style>
