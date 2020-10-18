@@ -100,15 +100,22 @@ export default {
       if (this.accessTeacher === true && this.loginForm.user_type === "Teacher") {
         alert("There is a teacher already in the session");
       } else {
-        userService
-          .createUser(this.loginForm)
-          .then(response => {
-            this.$store.dispatch("get_user", response.data);
-            this.$store.dispatch("get_teacher", self.teacher);
+        this.$refs["loginForm"].validate(valid => {
+          if (valid) {
+            userService
+              .createUser(this.loginForm)
+              .then(response => {
+                this.$store.dispatch("get_user", response.data);
+                this.$store.dispatch("get_teacher", self.teacher);
+                this.btnLoading = false;
+                this.$router.push("/session");
+              })
+              .catch(errors => console.log(errors));
+          } else {
             this.btnLoading = false;
-            this.$router.push("/session");
-          })
-          .catch(errors => console.log(errors));
+            return false;
+          }
+        });
       }
     }
   }
