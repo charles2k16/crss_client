@@ -44,6 +44,7 @@ export default {
   data() {
     return {
       btnLoading: false,
+      accessTeacher: false,
       users: [],
       loginForm: {
         name: "",
@@ -72,6 +73,8 @@ export default {
         .getUsers()
         .then(response => {
           this.users = response.data;
+          let findTeacher = this.users.find(user => user.user_type === "Teacher");
+          this.accessTeacher = findTeacher ? true : false;
         })
         .catch(errors => console.log(errors));
     },
@@ -91,14 +94,18 @@ export default {
       }
     },
     signUp() {
-      userService
-        .createUser(this.loginForm)
-        .then(response => {
-          this.$store.dispatch("get_user", response.data);
-          this.btnLoading = false;
-          this.$router.push("/session");
-        })
-        .catch(errors => console.log(errors));
+      if (this.accessTeacher === true && this.loginForm.user_type === "Teacher") {
+        alert("There is a teacher already in the session");
+      } else {
+        userService
+          .createUser(this.loginForm)
+          .then(response => {
+            this.$store.dispatch("get_user", response.data);
+            this.btnLoading = false;
+            this.$router.push("/session");
+          })
+          .catch(errors => console.log(errors));
+      }
     }
   }
 };
