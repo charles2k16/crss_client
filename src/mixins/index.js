@@ -10,13 +10,13 @@ export default {
   methods: {
     getHostName() {
       let hn = window.location.hostname
-      let uploadUrl = hn == 'localhost' ? "http://127.0.0.1:3000/uploads/" : "https://crss-server.herokuapp.com/uploads"
+      let uploadUrl = hn == 'localhost' ? "http://127.0.0.1:3000/uploads/" : "https://crss-server.herokuapp.com/uploads/"
       return uploadUrl;
     },
     getImageUrl(pic) {
       const url = this.getHostName()
+      console.log(url)
       return url + pic
-
     },
     leaveSession() {
       let userObj = {

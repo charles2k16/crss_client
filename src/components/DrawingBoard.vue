@@ -57,7 +57,7 @@ export default {
   data() {
     return {
       data: options,
-      socket: io("localhost:3000")
+      socket: io("https://crss-server.herokuapp.com")
     };
   },
   computed: {
@@ -73,12 +73,10 @@ export default {
     handleClear() {
       drawingBoard.clear();
     },
-
     handleDownload(e) {
       console.log(drawingBoard.download());
       drawingBoard.download();
     },
-
     handleGetFile() {
       let self = this;
       drawingBoard.getFile().then(file => {
@@ -114,37 +112,30 @@ export default {
 
       drawingBoard.setPenStyle({ color });
     },
-
     handleSetPenWidth(e) {
       const width = parseInt(e.target.value);
 
       drawingBoard.setPenStyle({ width });
     },
-
     handleRotate(dir) {
       drawingBoard.rotate(dir);
     },
-
     handleBigBtnClick() {
       drawingBoard.makeScaleAdd();
       console.log("big", drawingBoard.scale);
     },
-
     handleSmallBtnClick() {
       drawingBoard.makeScaleSubtract();
       console.log("small", drawingBoard.scale);
     },
-
     handleOriginBtnClick() {
       drawingBoard.setScale(1);
       console.log("origin", 1);
     },
-
     handleHandBtnClick() {
       drawingBoard.setPenModeDrag();
       console.log("penMode", drawingBoard.penMode);
     },
-
     handlePaintBtnClick() {
       drawingBoard.setPenModePaint();
       console.log("penMode", drawingBoard.penMode);

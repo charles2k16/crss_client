@@ -89,7 +89,7 @@ export default {
       message: "",
       messages: [],
       showBoard: false,
-      socket: io("localhost:3000")
+      socket: io("https://crss-server.herokuapp.com")
     };
   },
   computed: {
