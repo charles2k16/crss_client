@@ -97,7 +97,7 @@ export default {
     },
     signUp() {
       let self = this;
-      if (this.accessTeacher === true && this.loginForm.user_type === "Teacher") {
+      if (this.teacher !== null && this.loginForm.user_type === "Teacher") {
         alert("There is a teacher already in the session");
       } else {
         this.$refs["loginForm"].validate(valid => {
