@@ -5,8 +5,8 @@
       <button id="clear" @click="handleClear">clear</button>
       <button id="download" @click="handleDownload">download</button>
       <button id="getDataUrl" @click="handleGetDataUrl">getDataUrl</button>
-      <button id="getBlob" @click="handleGetBlob">getBlob</button>
-      <button id="getFile" @click="handleGetFile">getFile</button>
+      <button @click="handleGetBlob">getBlob</button>
+      <button @click="handleGetFile">getFile</button>
 
       <button id="big" @click="handleBigBtnClick">increase</button>
       <button id="small" @click="handleSmallBtnClick">decrese</button>
