@@ -94,7 +94,7 @@ export default {
       let messageObj = {
         sender: this.user._id,
         sender_id: this.user._id,
-        name: this.user.name,
+        senderName: this.user.name,
         media: file
       };
 

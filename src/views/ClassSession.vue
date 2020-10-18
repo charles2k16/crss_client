@@ -136,7 +136,7 @@ export default {
       let messageObj = {
         message: this.message.trim(),
         sender: this.user._id,
-        name: this.user.name,
+        senderName: this.user.name,
         sender_id: this.user._id
       };
 
