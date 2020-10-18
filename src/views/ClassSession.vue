@@ -56,7 +56,7 @@
                 <img :src="getImageUrl(msg.media)" alt="pic" v-if="msg.media" />
               </div>
 
-              <span>Sent By: {{ msg.sender_id !== user._id ? msg.sender.name : user.name }}</span>
+              <span>Sent By: {{ msg.sender_id !== user._id ? msg.senderName : user.name }}</span>
               <span> => few seconds ago</span>
             </div>
           </div>
