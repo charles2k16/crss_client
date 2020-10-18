@@ -44,10 +44,11 @@ export default {
   data() {
     return {
       btnLoading: false,
+      users: [],
       loginForm: {
         name: "",
         user_type: "",
-        online: false
+        online: true
       },
       rules: {
         name: [
@@ -62,12 +63,40 @@ export default {
       }
     };
   },
+  created() {
+    this.getAllUsers();
+  },
   methods: {
-    enterSession() {
+    getAllUsers() {
       userService
         .getUsers()
         .then(response => {
-          console.log(response);
+          this.users = response.data;
+        })
+        .catch(errors => console.log(errors));
+    },
+    enterSession() {
+      this.btnLoading = true;
+      let u = this.users;
+      let checkusers = Array.isArray(u) || u.length ? this.login() : this.signUp();
+    },
+    login() {
+      let authuser = this.users.find(user => user.name == this.loginForm.name);
+      if (authuser) {
+        this.$store.dispatch("get_user", authuser);
+        this.btnLoading = false;
+        this.$router.push("/session");
+      } else {
+        this.signUp();
+      }
+    },
+    signUp() {
+      userService
+        .createUser(this.loginForm)
+        .then(response => {
+          this.$store.dispatch("get_user", response.data);
+          this.btnLoading = false;
+          this.$router.push("/session");
         })
         .catch(errors => console.log(errors));
     }

@@ -12,8 +12,32 @@ const getters = {
   isOnline: (state) => state.online,
 }
 
+const actions = {
+  get_user({ commit }, user) {
+    commit('USER_SUCCESS', user)
+  },
+
+  leaveSession({ commit }) {
+    commit('LOGOUT')
+  },
+}
+
+const mutations = {
+  USER_SUCCESS: (state, user) => {
+    state.user = user
+    state.online = true
+  },
+  LOGOUT: (state) => {
+    state.students = []
+    state.teachers = []
+    state.user = null
+    state.online = false
+  },
+}
 
 export default {
   state,
-  getters
+  getters,
+  actions,
+  mutations
 }

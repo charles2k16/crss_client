@@ -2,21 +2,31 @@
   <div class="session">
     <div class="session_head">
       <h3>Class Session</h3>
-      <el-button type="text" icon="el-icon-turn-off"> Leave Session</el-button>
+
+      <div>
+        <el-button type="danger" icon="el-icon-turn-off" size="mini" @click="leaveSession">
+          Leave Session
+        </el-button>
+        <el-button type="primary" icon="el-icon-user" size="mini">
+          Welcome {{ user.name }}
+        </el-button>
+      </div>
     </div>
 
     <el-row type="flex" justify="center">
       <el-col :span="6">
         <div class="message-box">
-          <p>Online Teacher: <el-tag size="mini">Xha</el-tag></p>
-          <el-button type="text">Online Students <i class="el-icon-arrow-down"></i></el-button>
-          <ul>
-            <li>Cha</li>
-            <li>Xig</li>
-            <li>Ama</li>
-            <li>Chi</li>
-          </ul>
-
+          <div>
+            <p>Online Teacher: <el-tag size="mini">Xha</el-tag></p>
+            <el-collapse>
+              <el-collapse-item title="Online Students">
+                <ul v-for="u in onlineUsers" :key="u._id">
+                  <li>{{ u.name }}</li>
+                </ul>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+          <br /><br />
           <el-input
             type="textarea"
             v-model="message"
@@ -33,12 +43,17 @@
       </el-col>
       <el-col :span="13">
         <div class="chat-window">
-          <div class="incoming-message" v-for="(msg, index) in messages" :key="index">
+          <div
+            :class="msg.sender_id !== user._id ? 'incoming-message' : 'outgoing-message'"
+            v-for="(msg, index) in messages"
+            :key="index"
+          >
             <div>
               <p>
                 {{ msg.message }}
               </p>
-              <span>Sent By: Cha</span> <span>| few seconds ago</span>
+              <span>Sent By: {{ msg.sender_id !== user._id ? msg.sender.name : user.name }}</span>
+              <span> => few seconds ago</span>
             </div>
           </div>
         </div>
@@ -51,32 +66,73 @@
 
 <script>
 import io from "socket.io-client";
+import messageService from "../api/messages";
+import userService from "../api/users";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Session",
   data() {
     return {
+      onlineUsers: [],
       message: "",
       messages: [],
       dialogVisible: false,
       socket: io("localhost:3000")
     };
   },
+  computed: {
+    ...mapGetters({
+      user: "getUser"
+    })
+  },
   mounted() {
     this.socket.on("MESSAGE", data => {
       this.messages = [...this.messages, data];
-      console.log(this.messages);
-      // you can also do this.messages.push(data)
     });
   },
+  // watch: {
+  //   messages: function(v) {
+  //     console.log(v);
+  //   }
+  // },
+  created() {
+    this.getAllMessages();
+    this.getOnlineUsers();
+  },
   methods: {
+    getAllMessages() {
+      messageService.getMessages().then(response => {
+        this.messages = response.data;
+      });
+    },
+    getOnlineUsers() {
+      userService
+        .getUsers()
+        .then(response => {
+          this.onlineUsers = response.data.filter(user => user.online === true);
+        })
+        .catch(error => console.log(error));
+    },
     sendMessage(e) {
       e.preventDefault();
 
-      this.socket.emit("SEND_MESSAGE", {
-        user: this.user,
-        message: this.message
-      });
+      if (!this.message || this.message.trim() === "") {
+        return;
+      }
+      let messageObj = {
+        message: this.message.trim(),
+        sender: this.user._id,
+        sender_id: this.user._id
+      };
+
+      messageService
+        .createMessage(messageObj)
+        .then(response => {
+          this.socket.emit("SEND_MESSAGE", response.data);
+        })
+        .catch(errors => console.log(errors));
+
       this.message = "";
     }
   }
