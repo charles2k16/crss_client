@@ -8,12 +8,15 @@ export default {
     })
   },
   methods: {
-    getSender(sender) {
-      if (typeof sender == 'object' && sender !== null) {
-        return sender._id;
-      } else if (typeof sender == 'string' && sender !== null) {
-        return sender;
-      }
+    getHostName() {
+      let hn = window.location.hostname
+      let uploadUrl = hn == 'localhost' ? "http://127.0.0.1:3000/uploads/" : "https://crss-client.herokuapp.com/uploads/"
+      return uploadUrl;
+    },
+    getImageUrl(pic) {
+      const url = this.getHostName()
+      return url + pic
+
     },
     leaveSession() {
       let userObj = {

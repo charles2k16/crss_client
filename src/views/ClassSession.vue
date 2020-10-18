@@ -52,6 +52,10 @@
               <p>
                 {{ msg.message }}
               </p>
+              <div>
+                <img :src="getImageUrl(msg.media)" alt="pic" v-if="msg.media !== ''" />
+              </div>
+
               <span>Sent By: {{ msg.sender_id !== user._id ? msg.sender.name : user.name }}</span>
               <span> => few seconds ago</span>
             </div>
@@ -60,7 +64,9 @@
       </el-col>
     </el-row>
 
-    <el-dialog title="Tips" :visible.sync="dialogVisible" fullscreen> </el-dialog>
+    <el-dialog title="Board" :visible.sync="dialogVisible" fullscreen>
+      <DrawingBoard />
+    </el-dialog>
   </div>
 </template>
 
@@ -70,8 +76,13 @@ import messageService from "../api/messages";
 import userService from "../api/users";
 import { mapGetters } from "vuex";
 
+import DrawingBoard from "../components/DrawingBoard";
+
 export default {
   name: "Session",
+  components: {
+    DrawingBoard
+  },
   data() {
     return {
       onlineUsers: [],
@@ -178,6 +189,10 @@ export default {
         margin-top: 5px;
       }
 
+      img {
+        width: 70%;
+      }
+
       span {
         font-size: 12px;
       }
@@ -203,6 +218,10 @@ export default {
         font-size: 15px;
         margin-bottom: 4px;
         margin-top: 5px;
+      }
+
+      img {
+        width: 70%;
       }
 
       span {

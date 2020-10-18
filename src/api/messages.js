@@ -17,4 +17,11 @@ export default {
       .then((response) => Promise.resolve(response.data))
       .catch((error) => Promise.reject(error))
   },
+
+  uploadMessageFiles(img) {
+    let url = config.MESSAGES_URL + "/upload"
+    return axios.post(url, img)
+      .then((response) => Promise.resolve(response.data))
+      .catch((error) => Promise.reject(error))
+  },
 }
