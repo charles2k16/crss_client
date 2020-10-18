@@ -19,8 +19,8 @@
           <div>
             <p>
               Online Teacher:
-              <el-tag size="mini" v-if="teacher !== null">{{ teacher.name }}</el-tag>
-              <el-tag v-else>Non it yet</el-tag>
+              <el-tag size="mini" v-if="user.user_type === 'Teacher'">{{ user.name }}</el-tag>
+              <el-tag v-else size="mini">Not in yet</el-tag>
             </p>
             <el-collapse>
               <el-collapse-item title="Online Students">
