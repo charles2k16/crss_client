@@ -35,7 +35,7 @@
           ></el-input>
           <div style="margin-top: 15px;">
             <el-button icon="el-icon-s-promotion" @click="sendMessage"></el-button>
-            <el-button icon="el-icon-full-screen" @click="dialogVisible = true"
+            <el-button icon="el-icon-full-screen" @click="showBoard = true"
               >Send Equation</el-button
             >
           </div>
@@ -53,7 +53,7 @@
                 {{ msg.message }}
               </p>
               <div>
-                <img :src="getImageUrl(msg.media)" alt="pic" v-if="msg.media !== ''" />
+                <img :src="getImageUrl(msg.media)" alt="pic" v-if="msg.media" />
               </div>
 
               <span>Sent By: {{ msg.sender_id !== user._id ? msg.sender.name : user.name }}</span>
@@ -64,8 +64,8 @@
       </el-col>
     </el-row>
 
-    <el-dialog title="Board" :visible.sync="dialogVisible" fullscreen>
-      <DrawingBoard />
+    <el-dialog title="Board()" :visible.sync="showBoard" fullscreen>
+      <DrawingBoard v-on:finished="closeDrawingBoard" />
     </el-dialog>
   </div>
 </template>
@@ -88,7 +88,7 @@ export default {
       onlineUsers: [],
       message: "",
       messages: [],
-      dialogVisible: false,
+      showBoard: false,
       socket: io("localhost:3000")
     };
   },
@@ -115,13 +115,15 @@ export default {
     getAllMessages() {
       messageService.getMessages().then(response => {
         this.messages = response.data;
+        console.log(this.messages);
       });
     },
     getOnlineUsers() {
+      let self = this;
       userService
         .getUsers()
         .then(response => {
-          this.onlineUsers = response.data.filter(user => user.online === true);
+          self.onlineUsers = response.data.filter(user => user.online === true);
         })
         .catch(error => console.log(error));
     },
@@ -134,6 +136,7 @@ export default {
       let messageObj = {
         message: this.message.trim(),
         sender: this.user._id,
+        name: this.user.name,
         sender_id: this.user._id
       };
 
@@ -145,6 +148,9 @@ export default {
         .catch(errors => console.log(errors));
 
       this.message = "";
+    },
+    closeDrawingBoard() {
+      this.showBoard = false;
     }
   }
 };

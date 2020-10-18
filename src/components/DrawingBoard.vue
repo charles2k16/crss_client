@@ -1,25 +1,26 @@
 <template>
   <div>
     <div class="c-DrawingBoardTest">
-      <button id="revoke" @click="handleRevoke">revoke</button>
-      <button id="clear" @click="handleClear">clear</button>
-      <button id="download" @click="handleDownload">download</button>
-      <button id="getDataUrl" @click="handleGetDataUrl">getDataUrl</button>
-      <button @click="handleGetBlob">getBlob</button>
-      <button @click="handleGetFile">getFile</button>
+      <el-button @click="handleGetFile" icon="el-icon-s-promotion" size="medium" type="primary"
+        >Send</el-button
+      >
+      <el-button @click="handleClear" icon="el-icon-refresh-left" size="medium">Clear</el-button>
 
-      <button id="big" @click="handleBigBtnClick">increase</button>
-      <button id="small" @click="handleSmallBtnClick">decrese</button>
-      <button id="origin" @click="handleOriginBtnClick">default size</button>
+      <el-button icon="el-icon-download" size="medium" @click="handleDownload">download</el-button>
 
-      <button id="hand" @click="handleHandBtnClick">Drag</button>
-      <button id="paint" @click="handlePaintBtnClick">paint/write</button>
-      <button id="empty" @click="handleEmptyBtnClick">clean</button>
+      <el-button icon="el-icon-plus" size="medium" @click="handleBigBtnClick">Zoom In</el-button>
+      <el-button icon="el-icon-minus" size="medium" @click="handleSmallBtnClick"
+        >Zoom Out</el-button
+      >
+      <el-button icon="el-icon-crop" size="medium" @click="handleOriginBtnClick">Default</el-button>
 
-      <button id="reset" @click="handleResetBtnClick">reset</button>
+      <el-button icon="el-icon-thumb" size="medium" @click="handleHandBtnClick">Drag</el-button>
+      <el-button icon="el-icon-tickets" size="medium" @click="handlePaintBtnClick" type="info" plain
+        >Start Writing / Draw</el-button
+      >
 
       <hr />
-      <input type="color" id="color" value="#ff0000" @change="handleSetPenColor" />
+      <input type="color" value="#ff0000" @change="handleSetPenColor" />
 
       <input type="range" id="width" value="6" min="1" max="10" @change="handleSetPenWidth" />
 
@@ -69,10 +70,6 @@ export default {
   },
   created() {},
   methods: {
-    handleRevoke() {
-      drawingBoard.revoke();
-    },
-
     handleClear() {
       drawingBoard.clear();
     },
@@ -82,26 +79,14 @@ export default {
       drawingBoard.download();
     },
 
-    handleGetDataUrl() {
-      console.log(drawingBoard.getDataUrl());
-    },
-
-    handleGetBlob() {
-      drawingBoard.getBlob().then(blob => {
-        console.log(blob);
-      });
-    },
-
     handleGetFile() {
       let self = this;
       drawingBoard.getFile().then(file => {
-        console.log(file);
         const formData = new FormData();
         formData.append("file", file);
         messageService
           .uploadMessageFiles(formData)
           .then(response => {
-            console.log(response.data);
             self.sendImage(response.data);
           })
           .catch(errors => console.log(errors));
@@ -111,6 +96,7 @@ export default {
       let messageObj = {
         sender: this.user._id,
         sender_id: this.user._id,
+        name: this.user.name,
         media: file
       };
 
@@ -118,6 +104,7 @@ export default {
         .createMessage(messageObj)
         .then(response => {
           this.socket.emit("SEND_MESSAGE", response.data);
+          this.$emit("finished");
         })
         .catch(errors => console.log(errors));
     },
@@ -161,15 +148,6 @@ export default {
     handlePaintBtnClick() {
       drawingBoard.setPenModePaint();
       console.log("penMode", drawingBoard.penMode);
-    },
-
-    handleEmptyBtnClick() {
-      drawingBoard.setPenModeEmpty();
-      console.log("penMode", drawingBoard.penMode);
-    },
-
-    handleResetBtnClick() {
-      drawingBoard.reset();
     }
   }
 };
