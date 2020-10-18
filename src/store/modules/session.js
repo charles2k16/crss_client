@@ -1,13 +1,13 @@
 const state = {
   students: [],
-  teachers: [],
+  teacher: null,
   user: null,
   online: false,
 }
 
 const getters = {
   getUser: (state) => state.user,
-  getTeachers: (state) => state.teachers,
+  getTeacher: (state) => state.teacher,
   getStudents: (state) => state.students,
   isOnline: (state) => state.online,
 }
@@ -15,6 +15,10 @@ const getters = {
 const actions = {
   get_user({ commit }, user) {
     commit('USER_SUCCESS', user)
+  },
+
+  get_teacher({ commit }, teacher) {
+    commit('TEACHER_PRESENT', teacher)
   },
 
   leaveSession({ commit }) {
@@ -26,6 +30,9 @@ const mutations = {
   USER_SUCCESS: (state, user) => {
     state.user = user
     state.online = true
+  },
+  TEACHER_PRESENT: (state, teacher) => {
+    state.teacher = teacher
   },
   LOGOUT: (state) => {
     state.students = []

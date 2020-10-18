@@ -44,7 +44,8 @@ export default {
   data() {
     return {
       btnLoading: false,
-      accessTeacher: false,
+      teacherPresent: false,
+      teacher: null,
       users: [],
       loginForm: {
         name: "",
@@ -74,7 +75,8 @@ export default {
         .then(response => {
           this.users = response.data;
           let findTeacher = this.users.find(user => user.user_type === "Teacher");
-          this.accessTeacher = findTeacher ? true : false;
+          this.teacherPresent = findTeacher ? true : false;
+          this.teacher = this.teacherPresent ? findTeacher : null;
         })
         .catch(errors => console.log(errors));
     },
@@ -94,6 +96,7 @@ export default {
       }
     },
     signUp() {
+      let self = this;
       if (this.accessTeacher === true && this.loginForm.user_type === "Teacher") {
         alert("There is a teacher already in the session");
       } else {
@@ -101,6 +104,7 @@ export default {
           .createUser(this.loginForm)
           .then(response => {
             this.$store.dispatch("get_user", response.data);
+            this.$store.dispatch("get_teacher", self.teacher);
             this.btnLoading = false;
             this.$router.push("/session");
           })

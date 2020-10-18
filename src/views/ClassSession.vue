@@ -17,7 +17,11 @@
       <el-col :span="6">
         <div class="message-box">
           <div>
-            <p>Online Teacher: <el-tag size="mini">Xha</el-tag></p>
+            <p>
+              Online Teacher:
+              <el-tag size="mini" v-if="teacher !== null">{{ teacher.name }}</el-tag>
+              <el-tag v-else>Non it yet</el-tag>
+            </p>
             <el-collapse>
               <el-collapse-item title="Online Students">
                 <ul v-for="u in onlineUsers" :key="u._id">
@@ -94,7 +98,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      user: "getUser"
+      user: "getUser",
+      teacher: "getTeacher"
     })
   },
   mounted() {
